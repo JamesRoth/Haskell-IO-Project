@@ -31,4 +31,47 @@
     * Letters that do not occur in the text are not listed in the output at all.
 -}
 
-main = putStrLn "Put your program here!"
+import Data.Char (toLower)
+
+quicksort :: (Ord a) => [a] -> [a]  
+quicksort [] = []  
+quicksort (x:xs) =   
+    let smallerSorted = quicksort [a | a <- xs, a <= x]  
+        biggerSorted = quicksort [a | a <- xs, a > x]  
+    in  smallerSorted ++ [x] ++ biggerSorted  
+
+lengthsort [] = []  
+lengthsort (x:xs) =   
+    let smallerSorted = lengthsort [a | a <- xs, compareString a x]  
+        biggerSorted = lengthsort [a | a <- xs, not (compareString a x)]  
+    in  smallerSorted ++ [x] ++ biggerSorted  
+    
+compareString a b = 
+    if length(a) == length(b)
+        then a>b
+    else length(a) <= length(b)
+    
+
+concatLike :: [String] -> [String] -> [String]
+concatLike [] list = list
+concatLike (x:xs) list = 
+    if last(x) == last(last list)
+      then (concatLike xs (init(list) ++ [last(list) ++ x]))
+    else concatLike xs (list ++ [x])
+
+filterList' w = [ x | x <- list, elem (head(x)) (['a'..'z']++['A'..'Z'])]
+  where list = map (:[]) w
+
+printList list = mapM_ putStrLn list
+
+main = do
+    putStrLn "Please enter a string!"
+    str <- getLine
+    let modstr =  quicksort (filterList' (map toLower str))
+    --putStrLn modstr
+    --putStrLn (tail modstr)
+   -- putStrLn (words (head modstr))
+    let modstr' = concatLike (tail modstr) (words(head modstr))
+    
+    printList (reverse(lengthsort(modstr')))
+
